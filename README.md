@@ -1,10 +1,4 @@
-# Vendor Management System with Performance Metrics
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-                   ********very Important**********
-      please make sure not skip line 68 and 132  of this text file
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ## Overview
 
 This project implements a Vendor Management System using Django and Django REST Framework. The system includes features for managing vendor profiles, tracking purchase orders, and calculating vendor performance metrics.
