@@ -1,185 +1,154 @@
-# Vendor_management
-## Introduction
+# Vendor Management System with Performance Metrics
 
-The Vendor Management System, developed using Django, is a web application designed for streamlined vendor relationship management. 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+                   ********very Important**********
+      please make sure not skip line 68 and 132  of this text file
 
-It encompasses functionalities for managing vendor profiles, tracking purchase orders, and evaluating vendor performance. 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+## Overview
 
-Users can create, update, and delete vendor profiles, monitor purchase orders, and assess vendor performance metrics such as on-time delivery rate, quality rating average, average response time, and fulfillment rate. 
-
-
-## Roadmap
-
-- __Start and Plan:__ Understand the project scope and set up the basic structure.
-
-- __Vendor Setup:__ Create a system to manage vendor information and test it.
-
-- __Purchase Order Management:__ Develop purchase order forms and check their functionality.
-
-- __Performance Evaluation:__ Add a scoring system for vendors and calculate scores dynamically.
-
-- __Historical Tracking:__ Include a history feature to track vendor performance over time.
-
-- __Testing Phase:__ Conduct thorough testing, find and fix bugs.
-
-- __Deployment:__ Put the system online for use.
-
-- __Maintenance:__ Keep an eye on the system, fix issues, and assist users.
+This project implements a Vendor Management System using Django and Django REST Framework. The system includes features for managing vendor profiles, tracking purchase orders, and calculating vendor performance metrics.
 
 ## Features
 
-- User/Admin can add or remove vendors 
-- Vendors can see the list of different members
-- Admin can give the perfect calculations for performance
-- Easy to use
-- API endpoints can be checked using Django ORM
-- No need of any tools is needed for API endpoints checking.
+- **Vendor Profile Management:**
+  - Create, retrieve, update, and delete vendor profiles.
+- **Purchase Order Tracking:**
+  - Create, retrieve, update, and delete purchase orders.
+- **Vendor Performance Evaluation:**
+  - Calculate and retrieve vendor performance metrics.
+- **Purchase Order Acknowledgement:**
+  - can update acknowledgment time.
 
+## Getting Started
 
-## API Reference
+### Prerequisites
 
-#### Vendor Profile Management:
+- Python 3.6+
+- Django
+- Django RestFrameWork  
+- Pip
+- Virtualenv (optional but recommended)
 
-```http
-  POST /api/vendors/: Create a new vendor.
-  GET /api/vendors/: List all vendors.
-  GET /api/vendors/{vendor_id}/: Retrieve a specific vendor's details.
-  PUT /api/vendors/{vendor_id}/: Update a vendor's details.
-  DELETE /api/vendors/{vendor_id}/: Delete a vendor.
-```
+### Installation
 
+1. Clone the repository:
 
-#### Purchase Order Tracking:
+    ```bash
+    git clone https://github.com/palak-kalra/Vendor_management.git
+    cd Vendor_management
+    ```
 
-```http
-  POST /api/purchase_orders/: Create a purchase order.
-  GET /api/purchase_orders/: List all purchase orders with an option to filter by vendor.
-  GET /api/purchase_orders/{po_id}/: Retrieve details of a specific purchase order.
-  PUT /api/purchase_orders/{po_id}/: Update a purchase order.
-  DELETE /api/purchase_orders/{po_id}/: Delete a purchase order.
-```
+2. Set up a virtual environment (optional but recommended):
 
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use 'venv\Scripts\activate'
+    ```
 
-#### Historical Performance:
+3. Install dependencies:
 
-```http
-  GET /api/vendors/{vendor_id}/performance
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## Tech Stack
+4. Apply migrations:
 
-**Stack:** Python, Django, dbsqlite3
+    ```bash
+    python manage.py migrate
+    ```
 
-**Server:** localhost:8000
+5. Run the development server:
 
+    ```bash
+    python manage.py runserver
+    ```
 
-## Installation
+The API should now be accessible at `http://127.0.0.1:8000/`.
 
-```bash
-python -m venv venv
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+#####
+please make sure that you are applying migrations only once if you had applied migrations more than once please make sure that """" UniqueCode """" Model has only two records if there are more than two record (name="Vendor" ,code="1000"and name = "Po",code="100") please remove the records from that particular table else the code will run into errors 
+####
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-source venv/Scripts/activate
+## API Endpoints
 
-pip install django
+- **Vendor Endpoints:**
+  - POST `/api/vendors/`: Create a new vendor.
+  - GET `/api/vendors/`: List all vendors.
+  - GET `/api/vendors/{vendor_id}/`: Retrieve a specific vendor's details.
+  - PUT `/api/vendors/{vendor_id}/`: Update a vendor's details.
+  - DELETE `/api/vendors/{vendor_id}/`: Delete a vendor.
 
-pip install djangorestframework
+- **Purchase Order Endpoints:**
+  - POST `/api/purchase_orders/`: Create a purchase order.
+  - GET `/api/purchase_orders/`: List all purchase orders with an option to filter by vendor.
+  - GET `/api/purchase_orders/{po_id}/`: Retrieve details of a specific purchase order.
+  - PUT `/api/purchase_orders/{po_id}/`: Update a purchase order.
+  - DELETE `/api/purchase_orders/{po_id}/`: Delete a purchase order.
 
-pip install -r requirements.txt
+- **Vendor Performance Endpoint:**
+  - GET `/api/vendors/{vendor_id}/performance`: Retrieve a vendor's performance metrics.
 
-python manage.py makemigrations 
+- **Update Acknowledgment Endpoint:**
+  - POST `/api/purchase_orders/{po_id}/acknowledge`: Acknowledge a purchase order.
 
-python manage.py migrate
+## Backend Logic for Performance Metrics
 
-python manage.py createsuperuser 
+- **On-Time Delivery Rate:**
+  - Calculated each time a PO status changes to 'completed'.
+  - Logic: Count the number of completed POs delivered on or before delivery_date and divide by the total number of completed POs for that vendor.
 
-python manage.py runserver
+- **Quality Rating Average:**
+  - Updated upon the completion of each PO where a quality_rating is provided.
+  - Logic: Calculate the average of all quality_rating values for completed POs of the vendor.
 
-http://localhost:8000/vendors/  --for vendor list
+- **Average Response Time:**
+  - Calculated each time a PO is acknowledged by the vendor.
+  - Logic: Compute the time difference between issue_date and acknowledgment_date for each PO, and then find the average of these times for all POs of the vendor.
 
-http://localhost:8000/admin  --for admin
-```
-## Deployment
+- **Fulfillment Rate:**
+  - Calculated upon any change in PO status.
+  - Logic: Divide the number of successfully fulfilled POs (status 'completed' without issues) by the total number of POs issued to the vendor.
 
-To deploy this project on git
+## Additional Technical Considerations
 
-```bash
- ($ pip freeze > requirements.txt)  ### It will freeze all the requirements in one txt file ###
+- **Efficient Calculation:**
+  - Ensure that the logic for calculating metrics is optimized to handle large datasets without significant performance issues.
 
- ($ git init)   ### It will initialize the folder as a local Git repository ###
+- **Data Integrity:**
+  - Include checks to handle scenarios like missing data points or division by zero in calculations.
 
- ($ git status)   ### This command to check if there are any changes to your Django code that need to be pushed to git ###
+- **Real-time Updates:**
+  - Consider using Django signals to trigger metric updates in real-time when related PO data is modified.
 
- ($ git add -A)   ### The -A flag is for all. It is used for adding all the commits to a repository ###
+## Technical Requirements
 
- ($ git commit -m "initial commit") ### It is for passing the message to repository ###
+- **Django Version:** 3.2 (latest stable)
+- **Django REST Framework Version:** 3.12 (latest stable)
+- **Database:** SQLite (default in Django)
+- **Authentication:** Token-based authentication
+- **Coding Style:** PEP 8
 
-  ### Create A New Github Repository ###
-  - Click the ‘+’ dropdown at the top right corner of your GitHub dashboard and click on the ‘New Repository’ option.
-  - Type the name of the Repository. It is best practice to give it the same name as that of your Django project.
-  - Give a description of the project if you wish to do so.
-  - Choose if it is going to be a Private or Public directory.
-  - The next step ‘Initialize your project with:’ is optional, skip it if you wish to.
-  ### Click the ‘Create Reposity’ button ###
+## Testing
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+before executing test suite make sure that signals.py file code is not commented from line 7 to 11
+if you wish to comment that particular code  make sure to craete objects for unique code model in setUp method of each class in tests.py
 
- ($ git remote add origin https://github.com/bhush-n/vendor_management.git)  ### It will add a new remote origin ###
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+To run the test suite, use the following command:
 
- ($ git branch -M main)  ### It is used to shift to the main branch from master ###
+```bash for windows
 
- ($ git push -u origin main)  ### It will push your code the remote repository which you have added recently ###
+****please navigate to MyProject Directory and run the following command
 
+ python manage.py test vms
 
-```
 
+#Authorization
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Token Authorization is required for each api to be accessible 
+Token are meant to be created from Django Admin Panel for each user
 
-## Screenshots
-
-__Simple HTML page for Vendor List__\
-
-![Vendor List](Vendor_list.png)
-
-__Vendor List API Endpoint__
-
-![Vendor List API endpoint](vendor_list_endpoint.png)
-
-__Purchase Order API Endpoint__
-
-![Purchase Order API endpoint](purchaseorder_endpoint.png)
-
-__Historical Performance API Endpoint__
-
-![Historical Performance API endpoint](Historical_Performance_endpoint.png)
-
-## ASSIGNEMENT BY
-
-This project is assisgned by the following company:
-
-- [FATMUG, Delhi, India](https://www.linkedin.com/company/fatmug-designs/)
-
-
-
-## FAQ
-
-#### 1) I am getting the problem in database migration?
-
-First of all check all your databases if the db file has been created or not.
-Still if the problem pursuits, go to migration files and delete all the migrations files without __init__.py.
-Remigrate the database and it should be solved now.
-
-__How to check the database__
-
- Run the following commands in bash.
-- python manage.py dbshell
-- .table
-
-___
-
-#### 2) Api endpoints are not visible on cmd, What should I do?
-
-Api endpoints can only be checked by the tools like __POSTMAN__ or you can check it using __DJANGO_ORM__.
-
-For using Django-ORM, You have to register for the admin in project using
- - python manage.py createsuperuser
-
-Then you have to create the admin pages for all the API endpoints models in admin.py file.
-
-After successfully completing all this steps, You can now check your endpoints without any error.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
