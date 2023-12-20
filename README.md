@@ -135,7 +135,7 @@ To run the test suite, use the following command:
 
 ```bash for windows
 
-**please** navigate to MyProject Directory and run the following command
+please navigate to MyProject Directory and run the following command
 
  python manage.py test vms
 
