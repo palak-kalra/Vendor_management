@@ -126,16 +126,16 @@ please make sure that you are applying migrations only once if you had applied m
 - **Coding Style:** PEP 8
 
 ## Testing
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 before executing test suite make sure that signals.py file code is not commented from line 7 to 11
 if you wish to comment that particular code  make sure to craete objects for unique code model in setUp method of each class in tests.py
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 To run the test suite, use the following command:
 
 ```bash for windows
 
-****please**** navigate to MyProject Directory and run the following command
+**please** navigate to MyProject Directory and run the following command
 
  python manage.py test vms
 
